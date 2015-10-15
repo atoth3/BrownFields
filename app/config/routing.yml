@@ -1,0 +1,4 @@
+area:
+    resource: "@AreaBundle/Resources/config/routing.yml"
+    prefix:   /
+
