@@ -1,1 +1,13 @@
-Hello {{ name }}!
+{% extends '::base.html.twig' %}
+
+{% block title 'I\'m the Emperor!!!' %}
+
+{% block body %}
+    {# Hallo comments! #}
+
+    {% for i in 1..count %}
+    Hello <strong>{{ name|upper }}</strong> # {{ i }}!
+    {% endfor %}
+    <h2>Area Details</h2>
+    Area name: {{ area.name }}
+{% endblock %}

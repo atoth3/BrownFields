@@ -1,3 +1,6 @@
+area_area:
+    resource: "@AreaBundle/Resources/config/routing/area.yml"
+
 area_homepage:
-    path:     /hello/{name}
+    path:     /hello/{firstName}/{count}
     defaults: { _controller: AreaBundle:Default:index }
