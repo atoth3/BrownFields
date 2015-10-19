@@ -2,8 +2,12 @@
 
 namespace Bfvt\AreaBundle\Controller;
 
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Bfvt\AreaBundle\Entity\Area;
 use Bfvt\AreaBundle\Form\AreaType;
@@ -14,8 +18,9 @@ use Bfvt\AreaBundle\Form\AreaType;
  */
 class AreaController extends Controller
 {
-
     /**
+     * @Route("/", name="area")
+     * @Template
      * Lists all Area entities.
      *
      */
@@ -25,16 +30,21 @@ class AreaController extends Controller
 
         $entities = $em->getRepository('AreaBundle:Area')->findAll();
 
-        return $this->render('AreaBundle:Area:index.html.twig', array(
+        return array(
             'entities' => $entities,
-        ));
+        );
     }
     /**
+     * @Route("/create", name="area_create")
+     * @Method({"POST"})
+     * @Template
      * Creates a new Area entity.
      *
      */
     public function createAction(Request $request)
     {
+        $this->enforceUserSecurity();
+
         $entity = new Area();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
@@ -47,10 +57,10 @@ class AreaController extends Controller
             return $this->redirect($this->generateUrl('area_show', array('id' => $entity->getId())));
         }
 
-        return $this->render('AreaBundle:Area:new.html.twig', array(
+        return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-        ));
+        );
     }
 
     /**
@@ -73,21 +83,27 @@ class AreaController extends Controller
     }
 
     /**
+     * @Route("/new", name="area_new")
+     * @Template
      * Displays a form to create a new Area entity.
      *
      */
     public function newAction()
     {
+        $this->enforceUserSecurity();
+
         $entity = new Area();
         $form   = $this->createCreateForm($entity);
 
-        return $this->render('AreaBundle:Area:new.html.twig', array(
+        return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-        ));
+        );
     }
 
     /**
+     * @Route("/{id}/show", name="area_show")
+     * @Template
      * Finds and displays a Area entity.
      *
      */
@@ -103,18 +119,22 @@ class AreaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('AreaBundle:Area:show.html.twig', array(
+        return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
+     * @Route("/{id}/edit", name="area_edit")
+     * @Template
      * Displays a form to edit an existing Area entity.
      *
      */
     public function editAction($id)
     {
+        $this->enforceUserSecurity();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AreaBundle:Area')->find($id);
@@ -126,11 +146,11 @@ class AreaController extends Controller
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render('AreaBundle:Area:edit.html.twig', array(
+        return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
 
     /**
@@ -152,11 +172,16 @@ class AreaController extends Controller
         return $form;
     }
     /**
+     * @Route("/{id}/update", name="area_update")
+     * @Method({"GET", "POST"})
+     * @Template()
      * Edits an existing Area entity.
      *
      */
     public function updateAction(Request $request, $id)
     {
+        $this->enforceUserSecurity();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('AreaBundle:Area')->find($id);
@@ -175,18 +200,22 @@ class AreaController extends Controller
             return $this->redirect($this->generateUrl('area_edit', array('id' => $id)));
         }
 
-        return $this->render('AreaBundle:Area:edit.html.twig', array(
+        return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
-        ));
+        );
     }
     /**
+     * @Route("/{id}/delete", name="area_delete")
+     * @Method({"GET", "POST"})
      * Deletes a Area entity.
      *
      */
     public function deleteAction(Request $request, $id)
     {
+        $this->enforceUserSecurity();
+
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
@@ -220,5 +249,11 @@ class AreaController extends Controller
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
+    }
+    private function enforceUserSecurity(){
+        $securityContext = $this->get('security.authorization_checker');
+        if (!$securityContext->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Need ROLE_ADMIN');
+        }
     }
 }
