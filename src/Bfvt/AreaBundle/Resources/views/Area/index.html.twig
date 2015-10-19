@@ -5,6 +5,12 @@
     <section class="areas">
         <header id="menu">
             <a class="button" href="{{ path('area_new') }}">Create new area</a>
+
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <a class="link" href="{{ path('logout') }}">Logout</a>
+            {% else %}
+                <a class="link" href="{{ path('login_form') }}">Login</a>
+            {% endif %}
         </header>
 
         {% for entity in entities %}

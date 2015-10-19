@@ -2,8 +2,15 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>
+            {%- if block('title') -%}
+                {{- block('title') }} | budapesti teruletek
+            {%- else -%}
+                Terutek amelyek Budapesthez tartoznak
+            {%- endif -%}
+        </title>
         {% block stylesheets %}
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
             {% stylesheets
                 'bundles/area/css/area.css'
                 'bundles/area/css/areas.css'

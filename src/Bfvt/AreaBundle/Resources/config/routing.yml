@@ -1,6 +1,10 @@
-area_area:
-    resource: "@AreaBundle/Resources/config/routing/area.yml"
-
 area_homepage:
     path:     /hello/{firstName}/{count}
     defaults: { _controller: AreaBundle:Default:index }
+
+area_area:
+    resource: "@AreaBundle/Resources/config/routing/area.yml"
+
+area_annotations:
+    resource: "@AreaBundle/Controller"
+    type: annotation
