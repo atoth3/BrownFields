@@ -10,8 +10,8 @@ namespace Bfvt\UserBundle\Controller;
 
 use Bfvt\UserBundle\Entity\User;
 use Bfvt\UserBundle\Form\RegisterFromType;
+use Bfvt\AreaBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -59,8 +59,7 @@ class RegisterController extends Controller
     }
 
     private function enforceUserSecurity(){
-        $securityContext = $this->get('security.authorization_checker');
-        if (!$securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->getSecurityContext()->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException('Need ROLE_ADMIN');
         }
     }

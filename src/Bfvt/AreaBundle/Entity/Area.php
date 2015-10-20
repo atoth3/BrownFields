@@ -3,6 +3,8 @@
 namespace Bfvt\AreaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Bfvt\UserBundle\Entity\User;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Area
@@ -49,6 +51,28 @@ class Area
      */
     private $details;
 
+    /**
+     * @var \Bfvt\UserBundle\Entity\User
+     * @ORM\ManyToOne(targetEntity="Bfvt\UserBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $owner;
+
+    /**
+     * @return \Bfvt\UserBundle\Entity\User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param \Bfvt\UserBundle\Entity\User $owner
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+    }
 
     /**
      * Get id

@@ -17,9 +17,19 @@ $container = $kernel->getContainer();
 $container->enterScope('request');
 $container->set('request', $request);
 
-use Bfvt\AreaBundle\Entity\Area;
+use \Doctrine\ORM\EntityManager;
 
-$area = new Area();
+/** @var EntityManager $em */
+$em = $container->get('doctrine')->getManager();
+
+$user = $em->getRepository('UserBundle:User')
+    ->loadUserByUsername('adamkempo');
+
+foreach ($user->getAreas() as $area){
+    var_dump($area->getName());
+}
+
+/*$area = new Area();
 
 $area->setName('Kismogyorosos');
 $area->setDate( new \DateTime('tomorrow noon'));
@@ -28,7 +38,7 @@ $area->setLocation('NagyMogyoros');
 
 $em = $container->get('doctrine')->getManager();
 $em->persist($area);
-$em->flush();
+$em->flush();*/
 
 /*$templating = $container->get('templating');
 echo $templating->render(

@@ -2,6 +2,7 @@
 
 namespace Bfvt\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -58,6 +59,23 @@ class User implements UserInterface, \Serializable
      * @var string
      */
     private $plainPassword;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Bfvt\AreaBundle\Entity\Area",mappedBy="owner")
+     */
+    private $areas;
+
+    /**
+     * @return mixed
+     */
+    public function getAreas()
+    {
+        return $this->areas;
+    }
+
+    public function __construct(){
+        $this->areas = new ArrayCollection();
+    }
 
     /**
      * Get id

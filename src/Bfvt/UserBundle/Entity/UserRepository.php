@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Bfvt\AreaBundle\Entity\Area;
 
 /**
  * UserRepository
@@ -48,10 +49,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         || is_subclass_of($class, $this->getEntityName());
     }
 
-    /*
+    /**
      * @param $username
      * @return User|null
-     * */
+     */
     private function findUserByName($username){
         return $this->createQueryBuilder('u')
             ->andWhere('u.username = :username')

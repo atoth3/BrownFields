@@ -4,7 +4,6 @@ namespace Bfvt\AreaBundle\Controller;
 
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -50,6 +49,9 @@ class AreaController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $user = $this->getUser();
+            $entity->setOwner($user);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -143,6 +145,8 @@ class AreaController extends Controller
             throw $this->createNotFoundException('Unable to find Area entity.');
         }
 
+        $this->enforceOwnerSecurity($entity);
+
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -190,6 +194,8 @@ class AreaController extends Controller
             throw $this->createNotFoundException('Unable to find Area entity.');
         }
 
+        $this->enforceOwnerSecurity($entity);
+
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
@@ -227,6 +233,8 @@ class AreaController extends Controller
                 throw $this->createNotFoundException('Unable to find Area entity.');
             }
 
+            $this->enforceOwnerSecurity($entity);
+
             $em->remove($entity);
             $em->flush();
         }
@@ -250,9 +258,9 @@ class AreaController extends Controller
             ->getForm()
         ;
     }
+
     private function enforceUserSecurity(){
-        $securityContext = $this->get('security.authorization_checker');
-        if (!$securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->getSecurityContext()->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException('Need ROLE_ADMIN');
         }
     }
