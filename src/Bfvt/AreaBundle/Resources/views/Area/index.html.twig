@@ -11,6 +11,8 @@
             {% else %}
                 <a class="link" href="{{ path('login_form') }}">Login</a>
             {% endif %}
+
+            <a class="button" href="{{ path('xml_export') }}">Download the xml</a>
         </header>
 
         {% for entity in entities %}
@@ -29,9 +31,6 @@
 
                         <dt>when:</dt>
                         <dd>{{ entity.date | date('g:ia / l M j, Y') }}</dd>
-
-                        <dt>who:</dt>
-                        <dd>{{ entity.owner }}</dd>
                     </dl>
                 </section>
             </article>
