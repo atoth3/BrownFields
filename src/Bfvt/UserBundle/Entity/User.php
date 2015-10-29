@@ -7,15 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use FOS\UserBundle\Model\User as BaseUser;
 
 /**
  * User
  *
- * @ORM\Table(name="bfvt_user")
+ * @ORM\Table(name="fos_user")
  * @ORM\Entity(repositoryClass="Bfvt\UserBundle\Entity\UserRepository")
  * @UniqueEntity(fields="username", message="The user name is exist.")
  */
-class User implements UserInterface, \Serializable
+class User extends BaseUser
 {
     /**
      * @var integer
@@ -24,7 +25,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -33,21 +34,21 @@ class User implements UserInterface, \Serializable
      * @Assert\Length(min="3", minMessage="Give us at least 3 characters")
      * @ORM\Column(name="username", type="string", length=255)
      */
-    private $username;
+    protected $username;
 
     /**
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
      */
-    private $password;
+    protected $password;
 
     /**
      * @var array
      *
      * @ORM\Column(name="roles", type="json_array")
      */
-    private $roles = array();
+    protected $roles = array();
 
     /**
      * Just store the plain password temporarily!
@@ -58,146 +59,28 @@ class User implements UserInterface, \Serializable
      * )
      * @var string
      */
-    private $plainPassword;
+    protected $plainPassword;
 
     /**
-     * @ORM\OneToMany(targetEntity="Bfvt\AreaBundle\Entity\Area",mappedBy="owner")
+     * @ORM\Column(name="$usernameCanonical", type="string", length=255)
+     * @var string
      */
-    private $areas;
+    protected $usernameCanonical;
+
 
     /**
-     * @return mixed
+     * @ORM\Column(name="enabled", type="boolean")
+     * @var boolean
      */
-    public function getAreas()
-    {
-        return $this->areas;
-    }
+    protected $enabled;
 
+    /**
+     * @var string
+     */
     public function __construct(){
-        $this->areas = new ArrayCollection();
+        parent::__construct();
+
+        $this->enabled = true;
+//        $this->roles = array('ROLE_ADMIN');
     }
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set username
-     *
-     * @param string $username
-     * @return User
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string 
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * Set roles
-     *
-     * @param array
-     * @return User
-     */
-    public function setRoles(array $roles){
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * Get roles
-     *
-     * @return json_array
-     */
-    public function getRoles(){
-        $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function eraseCredentials(){
-        $this->setPlainPassword(null);
-    }
-
-    public function getSalt(){
-        return null;
-    }
-
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->password
-        ));
-    }
-
-    public function unserialize($serialized)
-    {
-        list(
-            $this->id,
-            $this->username,
-            $this->password
-            ) = unserialize($serialized);
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlainPassword()
-    {
-        return $this->plainPassword;
-    }
-
-    /**
-     * @param string $plainPassword
-     */
-    public function setPlainPassword($plainPassword)
-    {
-        $this->plainPassword = $plainPassword;
-    }
-
-
 }

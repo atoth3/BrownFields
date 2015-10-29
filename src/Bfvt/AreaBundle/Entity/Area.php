@@ -52,29 +52,6 @@ class Area
     private $details;
 
     /**
-     * @var \Bfvt\UserBundle\Entity\User
-     * @ORM\ManyToOne(targetEntity="Bfvt\UserBundle\Entity\User")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
-    private $owner;
-
-    /**
-     * @return \Bfvt\UserBundle\Entity\User
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
-     * @param \Bfvt\UserBundle\Entity\User $owner
-     */
-    public function setOwner(User $owner)
-    {
-        $this->owner = $owner;
-    }
-
-    /**
      * Get id
      *
      * @return integer 

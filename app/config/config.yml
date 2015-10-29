@@ -35,6 +35,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form:
+        resources:
+            - 'SonataCoreBundle:Form:datepicker.html.twig'
 
 # Assetic Configuration
 assetic:
@@ -78,3 +81,38 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+#Security
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: Bfvt\UserBundle\Entity\User
+
+#Sonata
+sonata_core: ~
+
+sonata_admin:
+    templates:
+        #dashboard: AreaBundle:Admin:dashboard.html.twig #TODO this is a bad place for this, it should be in the root
+        layout: AreaBundle:Admin:standard_layout.html.twig
+    dashboard:
+        groups:
+            admin.area:
+                label: "Brown Field"
+                items:
+                    - admin.area
+                roles: [ ROLE_ADMIN ]
+            admin.misc: ~
+        blocks:
+            - { position: left, type: sonata.admin.block.admin_list }
+            - { position: center, type: sonata.block.service.text, settings: { content: "<h2>Welcome!</h2> You can customize this dashboard by editing the sonata_admin.yml file. The current dashboard presents the recent items from the NewsBundle and a timeline with the latest action"} }
+#    security:
+#        handler: sonata.admin.security.handler.role
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        # enable the SonataAdminBundle block
+        sonata.admin.block.admin_list:
+            contexts: [admin]
+        sonata.block.service.text:
